@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  chromadb:
+    image: chromadb/chroma:latest  # Official Chroma DB Docker image
+    container_name: chromadb
+    ports:
+      - "8010:8000"  # Exposing the API on port 8000
+    volumes:
+      - chromadb_data:/data  # Persist data between container runs
+    environment:
+      - CHROMA_API_HOST=0.0.0.0  # Listen on all interfaces
+      - CHROMA_API_PORT=8000     # Port for the API service
+      - CHROMA_ALLOWED_ORIGINS=* # Allow Cross-Origin Requests (CORS)
+      - CHROMA_PERSISTENCE=true  # Enable persistence for Chroma data
+      - CHROMA_DATA_DIRECTORY=/data  # Where data will be stored
+volumes:
+  chromadb_data:
