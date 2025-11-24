@@ -1,0 +1,121 @@
+{
+  "patient_id": "AJ19790515",
+  "profile": {
+    "name": "Alex Johnson",
+    "age": 45,
+    "sex": "Male",
+    "ethnicity": "Caucasian",
+    "occupation": "Software Developer",
+    "date_of_birth": "1979-05-15",
+    "allergies": [
+      {
+        "substance": "Penicillin",
+        "reaction": "Mild rash"
+      }
+    ]
+  },
+  "physical_metrics": {
+    "height_cm": 178,
+    "weight_kg": 85,
+    "bmi": 26.9,
+    "temperature_c": 37.0,
+    "blood_pressure_mmhg": "135/88",
+    "resting_heart_rate_bpm": 72
+  },
+  "lab_results": [
+    {
+      "test_name": "Total Cholesterol",
+      "value": 225,
+      "units": "mg/dL",
+      "reference_range": "<200",
+      "interpretation": "High"
+    },
+    {
+      "test_name": "LDL Cholesterol",
+      "value": 150,
+      "units": "mg/dL",
+      "reference_range": "<100",
+      "interpretation": "High"
+    },
+    {
+      "test_name": "HDL Cholesterol",
+      "value": 40,
+      "units": "mg/dL",
+      "reference_range": ">60",
+      "interpretation": "Low"
+    },
+    {
+      "test_name": "Triglycerides",
+      "value": 180,
+      "units": "mg/dL",
+      "reference_range": "<150",
+      "interpretation": "Borderline High"
+    },
+    {
+      "test_name": "Fasting Glucose",
+      "value": 115,
+      "units": "mg/dL",
+      "reference_range": "70-99",
+      "interpretation": "Pre-diabetic"
+    },
+    {
+      "test_name": "Hemoglobin A1c",
+      "value": 5.9,
+      "units": "%",
+      "reference_range": "<5.7",
+      "interpretation": "Pre-diabetic"
+    },
+    {
+      "test_name": "Creatinine",
+      "value": 0.9,
+      "units": "mg/dL",
+      "reference_range": "0.6-1.2",
+      "interpretation": "Normal"
+    }
+  ],
+  "medical_history": {
+    "active_diagnoses": [
+      {
+        "diagnosis": "Hypercholesterolemia",
+        "icd10": "E78.0"
+      },
+      {
+        "diagnosis": "Essential (Primary) Hypertension, Stage 1",
+        "icd10": "I10"
+      },
+      {
+        "diagnosis": "Pre-diabetes",
+        "icd10": "R73.03"
+      },
+      {
+        "diagnosis": "Mild Seasonal Allergies",
+        "icd10": "J30.9"
+      }
+    ],
+    "current_medications": [
+      {
+        "medication": "Lisinopril",
+        "dosage": "10 mg",
+        "frequency": "Once daily",
+        "reason": "Hypertension"
+      },
+      {
+        "medication": "Simvastatin",
+        "dosage": "20 mg",
+        "frequency": "Once daily",
+        "reason": "Hypercholesterolemia"
+      }
+    ],
+    "past_history": "Appendectomy at age 12.",
+    "family_history": {
+      "father": ["Type 2 Diabetes", "Coronary Artery Disease (CAD)"],
+      "mother": ["Osteoarthritis"]
+    }
+  },
+  "lifestyle_factors": {
+    "diet": "Reports frequent consumption of processed foods, struggles with vegetable consistency.",
+    "exercise": "Walks 30 minutes 3-4 times per week. Largely sedentary desk job.",
+    "smoking_status": "Non-smoker",
+    "alcohol_consumption": "4-6 alcoholic drinks per week (average)."
+  }
+}
