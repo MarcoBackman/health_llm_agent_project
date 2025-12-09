@@ -13,10 +13,11 @@ class FinalSummaryNode(NodeBase):
         super().__init__(seq_counter, FinalSummaryNode.name)
 
     def __call__(self, state: AgentState, config=None):
-        # Todo: 비즈니스 로직 추가
         self._log_entry("final_summary", state)
 
-        final_response = state["ai_responses"]
+        # Retrieve AI responses and set the final response
+        ai_responses = state.get("ai_responses", {})
+        final_response = ai_responses.get("response", "Error: No content in AI response.")
 
         updated_state = state.copy()
         updated_state["final_response"] = final_response

@@ -1,5 +1,6 @@
 from agent.impl.dietary_advisor_agent import DietaryAdvisorAgent
 from graph.node.node_base import NodeBase
+from graph.state.state_enum import StateEnum
 
 LAST_MESSAGE_INDEX = -1
 
@@ -21,27 +22,33 @@ class DietaryAdviseNode(NodeBase):
         self.agent = DietaryAdvisorAgent()
 
     def __call__(self, state, config=None):
-        """
-        Execute the dietary advice logic and update the state.
-
-        :param state: Current AgentState.
-        :param config: Optional configuration.
-        :return: Updated state with dietary advice.
-        """
         self._log_entry(self.node_name, state)
 
+        # Extract the last user message
+        user_message_history = state.get("messages", [])
+        if not user_message_history:
+            raise ValueError("No user messages found in the state.")
+
         try:
-            user_message_history = state.get("messages", [])
-            dietary_advice = self.agent.run(user_message_history[LAST_MESSAGE_INDEX])
+            user_message = user_message_history[LAST_MESSAGE_INDEX]
+
+            # Use agent to dynamically select the tool
+            selection = self.agent.select_tool(user_message)
+
+            # Populate the tool and method in the state for `ToolNode`
+            state["selected_tool"] = selection["tool_name"]
+            state["selected_method"] = selection["method_name"]
+
+            # Optionally log the selection
+            print(f"Selected Tool: {selection['tool_name']}, Method: {selection['method_name']}")
+
         except Exception as e:
-            dietary_advice = {"error": str(e)}
+            print(f"Error in DietaryAdviseNode: {e}")
+            state["status"] = StateEnum.ERROR
 
-        print(f"[DietaryAdviseNode] Dietary Advice: {dietary_advice}")
-
-        updated_state = state.copy()
-        updated_state["ai_responses"] = dietary_advice
         self._log_exit()
-        return updated_state
+        return state
+
 
     def _update_state(self, state, config=None):
         #Todo: update 할 state 들

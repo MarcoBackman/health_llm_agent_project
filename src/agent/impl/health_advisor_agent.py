@@ -4,7 +4,6 @@ from typing import Dict, Any
 from common.env_data import EnvData
 from tools.llm_api_tool import LlmApiTool
 
-#Todo: 사용 할 것
 class HealthAdvisorAgent(AgentBase):
     """
         해당 거강 Advisor Agent는 사용자의 프로필에 따라 건강 수치를 불러오고 요약해주는 기능을 한다
@@ -14,7 +13,6 @@ class HealthAdvisorAgent(AgentBase):
     """
     def __init__(self):
         super().__init__()
-        self.api_tool = LlmApiTool()
 
     def run(self, user_message: str) -> str:
         """
@@ -22,12 +20,7 @@ class HealthAdvisorAgent(AgentBase):
         """
 
         try:
-            ai_response = self.api_tool.send_request(
-                user_message,
-                max_tokens=EnvData.MAX_TOKEN,
-                temperature=EnvData.TEMPERATURE,
-                top_p=EnvData.TOP_N
-            )
+            ai_response = LlmApiTool.llm_tool.execute_tool(message=user_message)
         except Exception as e:
             ai_response = f"Error: {str(e)}"
 
