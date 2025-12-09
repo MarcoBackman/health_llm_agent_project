@@ -1,7 +1,4 @@
 import os
-
-from langchain_community.embeddings import HuggingFaceEmbeddings
-
 from langchain.embeddings import HuggingFaceEmbeddings
 
 def get_embedding():

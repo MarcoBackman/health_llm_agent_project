@@ -5,8 +5,10 @@ from langgraph.constants import START, END
 from langgraph.graph import StateGraph
 
 from graph.node.impl.dietary_advise_node import DietaryAdviseNode
+from graph.node.impl.dietary_tool_node import DietaryToolNode
 from graph.node.impl.final_summary_node import FinalSummaryNode
 from graph.node.impl.sports_advise_node import SportsAdviseNode
+from graph.node.impl.sports_tool_node import SportsToolNode
 from graph.node.impl.topic_validation_node import TopicValidationNode
 
 from graph.node.impl.user_profile_load_node import UserProfileLoadNode
@@ -29,6 +31,8 @@ def build_graph():
     builder.add_node(SportsAdviseNode.name, SportsAdviseNode())
     builder.add_node(DietaryAdviseNode.name, DietaryAdviseNode())
     builder.add_node(FinalSummaryNode.name, FinalSummaryNode())
+    builder.add_node(SportsToolNode.name, SportsToolNode())
+    builder.add_node(DietaryToolNode.name, DietaryToolNode())
 
     # Edges
     builder.add_edge(START, TopicValidationNode.name)
@@ -37,8 +41,6 @@ def build_graph():
     #conditional edge
     def is_sports_related_dynamic(state: Dict) -> str:
         result = state.get(StateEnum.IS_SPORT_RELATED.value)
-        print(f"[is_sports_related] state: {state}")
-        print(f"[is_sports_related] value: {StateEnum.IS_SPORT_RELATED.value}")
         return SportsAdviseNode.name if result else DietaryAdviseNode.name
 
 
@@ -48,8 +50,26 @@ def build_graph():
         path_map={SportsAdviseNode.name: SportsAdviseNode.name, DietaryAdviseNode.name: DietaryAdviseNode.name}
     )
 
-    builder.add_edge(SportsAdviseNode.name, FinalSummaryNode.name)
-    builder.add_edge(DietaryAdviseNode.name, FinalSummaryNode.name)
+    builder.add_conditional_edges(
+        source=SportsAdviseNode.name,
+        path=lambda state: state.get(StateEnum.AI_RESPONSES.value),
+        path_map={True: FinalSummaryNode.name, False: SportsToolNode.name}
+    )
+    builder.add_edge(SportsToolNode.name, SportsAdviseNode.name)
+
+
+    builder.add_conditional_edges(
+        source=DietaryAdviseNode.name,
+        path=lambda state: state.get(StateEnum.AI_RESPONSES.value),
+        path_map={True: FinalSummaryNode.name, False: DietaryToolNode.name}
+    )
+    builder.add_edge(DietaryToolNode.name, DietaryAdviseNode.name) #복귀
+
+
+    # Direct transition to FinalSummaryNode after ToolNode execution
+    builder.add_edge(SportsToolNode.name, FinalSummaryNode.name)
+
+    # Connect FinalSummaryNode to END to complete the graph
     builder.add_edge(FinalSummaryNode.name, END)
 
 

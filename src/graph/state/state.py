@@ -1,4 +1,4 @@
-from typing import TypedDict, Any
+from typing import TypedDict
 
 from graph.state.state_enum import StateEnum
 
@@ -13,6 +13,8 @@ class AgentState(TypedDict, total=False):
     status: StateEnum
     tools_used: list[str]
     messages: list[str]
-    ai_responses: dict[str, Any]
+    ai_responses: dict
     final_response: str
     is_sport_related: bool
+    selected_tool: str
+    selected_method: str

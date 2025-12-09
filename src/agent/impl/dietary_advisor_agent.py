@@ -1,7 +1,6 @@
 from agent.agent_base import AgentBase
 from typing import Dict, Any
 
-from common.env_data import EnvData
 from tools.llm_api_tool import LlmApiTool
 
 
@@ -11,37 +10,23 @@ class DietaryAdvisorAgent(AgentBase):
 
         해당 에이전트는 사용자의 정보가 없으면 평균적인 사람 이력에 따라 답변한다
     """
-    def __init__(self):
-        super().__init__()
-
-        #tools
-        self.api_tool = LlmApiTool()
 
     def run(self, user_message: str) -> str:
         """
         Provide dietary advice based on user history.
 
-        :param history: Previous user messages as a list.
+        :param user_message: User input message.
+        :param user_id: Unique identifier for the user.
         :return: Dictionary containing dietary-specific advice.
         """
-        
-        #Todo: dietary advisor 비즈니스 로직 추가
-        
 
         try:
-            prompt = (
-                f"The user is asking for general dietary advice.\n\n"
-                f"User Query: {user_message}\n\n"
-                "Provide general dietary recommendations. And respond back in Korean"
-            )
+            # Dynamically select the tool and method
+            ai_response = LlmApiTool.llm_tool.execute_tool(message=user_message)
 
-            ai_response = self.api_tool.send_request(
-                prompt,
-                max_tokens=EnvData.MAX_TOKEN,
-                temperature=EnvData.TEMPERATURE,
-                top_p=EnvData.TOP_N
-            )
         except Exception as e:
+            # Log and handle exceptions
+            print(f"[DietaryAdvisorAgent] Error occurred: {str(e)}")
             ai_response = f"Error: {str(e)}"
 
         return ai_response

@@ -1,20 +1,11 @@
-from typing import Dict, Any
+from typing import Any
 
 from agent.agent_base import AgentBase
-from common.env_data import EnvData
 from tools.llm_api_tool import LlmApiTool
-from tools.user_sports_tool import UserSportsTool
+from tools.sports_response_tool import print_sport_type_tool
 
 
 class SportsAdvisorAgent(AgentBase):
-
-    def __init__(self):
-        super().__init__()
-
-        #Tools
-        self.api_tool = LlmApiTool()
-        self.sports_tool: UserSportsTool = UserSportsTool()
-
 
     def run(self, user_message: str) -> str:
         """
@@ -22,21 +13,32 @@ class SportsAdvisorAgent(AgentBase):
         """
 
         try:
-            ai_response = self.api_tool.send_request(
-                user_message,
-                max_tokens=EnvData.MAX_TOKEN,
-                temperature=EnvData.TEMPERATURE,
-                top_p=EnvData.TOP_N
-            )
+            LlmApiTool.llm_tool.bind_tool_to_api([print_sport_type_tool])
+            response = LlmApiTool.llm_tool.invoke(input=user_message)
+
+            # 현재 응답에서 호출된 모든 tool 이름을 추출
+            print(f"SportsAdvisorAgent response: {response}")
+            tool_calls = response.additional_kwargs.get("tool_calls", [])
+            print(f"tool_calls={tool_calls}")
+            tools_used = [t["function"]["name"] for t in tool_calls]
+            if tools_used:
+                print(f"[SportsAdvisorAgent] Tools used: {tools_used}")
+                return response.content
+
+
         except Exception as e:
-            ai_response = f"Error: {str(e)}"
+            # Log errors and fall back to an error message
+            print(f"[SportsAdvisorAgent] Error during tool execution: {str(e)}")
 
-        return self.sports_tool.process_message(ai_response["response"])
+        return ""
 
-    def preprocess(self, input_data: Dict[str, Any]) -> Any:
-        #Todo: implement
-        pass
 
-    def postprocess(self, output_data: Dict[str, Any]) -> Any:
-        #Todo: implement
-        pass
+    def preprocess(self, input_data: Any) -> Any:
+        # Prepare user query before processing
+        if isinstance(input_data, str):
+            return input_data.strip()
+        raise ValueError("Expected input to be a string.")
+
+    def postprocess(self, output_data: Any) -> Any:
+        # Format and clean up the response before returning it
+        return str(output_data).strip()

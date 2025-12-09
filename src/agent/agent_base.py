@@ -13,6 +13,7 @@ class AgentBase(ABC):
         The entry point for executing tasks for this agent.
 
         :param user_message:
+        :param user_id:
         """
         ...
 

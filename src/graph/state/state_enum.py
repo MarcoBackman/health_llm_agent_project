@@ -11,3 +11,5 @@ class StateEnum(Enum):
     IS_SPORT_RELATED = "is_sport_related"
 
     MESSAGE = "messages"
+    AI_RESPONSES = "ai_responses"
+    STATUS = "status"
